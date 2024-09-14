@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Add Product</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #6a11cb;
+            color: white;
+            padding: 20px 50px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 1.8rem;
+        }
+
+        .form-container {
+            margin: 50px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 500px;
+        }
+
+        .form-container h2 {
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        .form-container input, .form-container button {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            font-size: 1rem;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .form-container button {
+            background-color: #6a11cb;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .form-container button:hover {
+            background-color: #4d00b4;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Admin Dashboard</h1>
+        <div class="header-links">
+            <a href="index.html" style="color: white;">Shop</a>
+        </div>
+    </header>
+
+    <div class="form-container">
+        <h2>Add New Product</h2>
+        <input type="text" id="productName" placeholder="Product Name" required>
+        <input type="number" id="productPrice" placeholder="Product Price" required>
+        <textarea id="productDescription" placeholder="Product Description" required></textarea>
+        <input type="text" id="productImageUrl" placeholder="Product Image URL" required>
+        <button id="addProductButton">Add Product</button>
+    </div>
+    <script>
+        // Existing Script Update
+addProductButton.addEventListener('click', function() {
+    const name = document.getElementById('productName').value;
+    const price = document.getElementById('productPrice').value;
+    const description = document.getElementById('productDescription').value; // Missing description input field
+    const image_url = document.getElementById('productImageUrl').value;
+
+    if (name && price && description && image_url) {
+        fetch('http://localhost:3000/admin/product', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token') // Ensure the admin is authenticated
+            },
+            body: JSON.stringify({ name, price, description, image_url })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to add product.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            alert(data.message || 'Product added successfully.');
+            window.location.href = 'index.html';
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error adding product');
+        });
+    } else {
+        alert('Please fill out all fields');
+    }
+});
+
+    </script>
+    
+</body>
+</html>
